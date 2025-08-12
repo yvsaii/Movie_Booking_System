@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>BookMyShowLite - Home</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Poppins', sans-serif;
+		}
+
+		body {
+			background: linear-gradient(to right, #f7f7f7, #e2e2e2);
+			color: #333;
+		}
+
+		header {
+			background-color: #4CAF50;
+			color: white;
+			padding: 1.5rem;
+			text-align: center;
+			animation: fadeDown 0.5s ease-in-out;
+		}
+
+		@keyframes fadeDown {
+			from {
+				opacity: 0;
+				transform: translateY(-20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		nav {
+			display: flex;
+			justify-content: center;
+			background-color: #3e8e41;
+			padding: 0.7rem;
+			flex-wrap: wrap; /* allow wrapping on small screens */
+		}
+
+		nav a {
+			color: white;
+			text-decoration: none;
+			margin: 0.5rem 1rem;
+			font-weight: bold;
+		}
+
+		nav a:hover {
+			text-decoration: underline;
+		}
+
+		.hero {
+			min-height: 80vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			padding: 1rem;
+			text-align: center;
+			animation: slideIn 0.6s ease-in-out;
+		}
+
+		.hero h1 {
+			font-size: 3rem;
+			margin-bottom: 1rem;
+		}
+
+		.hero p {
+			font-size: 1.2rem;
+			margin-bottom: 2rem;
+			max-width: 600px;
+		}
+
+		.hero button {
+			padding: 0.8rem 2rem;
+			font-size: 1rem;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+		}
+
+		.hero button:hover {
+			background-color: #45a049;
+		}
+
+		/* Responsive design */
+		@media (max-width: 768px) {
+			.hero h1 {
+				font-size: 2.2rem;
+			}
+
+			.hero p {
+				font-size: 1rem;
+			}
+
+			.hero button {
+				width: 80%;
+				font-size: 1rem;
+			}
+		}
+
+		@media (max-width: 480px) {
+			header {
+				padding: 1rem;
+			}
+
+			.hero h1 {
+				font-size: 1.8rem;
+			}
+
+			.hero p {
+				font-size: 0.95rem;
+			}
+
+			nav {
+				flex-direction: column;
+				align-items: center;
+			}
+
+			nav a {
+				margin: 0.3rem 0;
+			}
+		}
+	</style>
+</head>
+<body>
+
+<header>
+	<h1>Galaxy Screens</h1>
+	<p>Your One-Stop Platform for Movie Ticket Booking</p>
+</header>
+
+<nav>
+	<a th:href="@{/MultipleTheater/home}">Home</a>
+	<a th:href="@{/MultipleTheater/movies}">Movies</a>
+	<a th:href="@{/MultipleTheater/about}">About</a>
+	<a th:href="@{/MultipleTheater/history}">History</a>
+	<a th:href="@{/MultipleTheater/login}">Logout</a>
+</nav>
+
+<h2>Your Booking History</h2>
+
+<div th:if="${#lists.isEmpty(historyList)}">
+	<p>No history found.</p>
+</div>
+
+<table th:if="${!#lists.isEmpty(historyList)}" border="1">
+	<thead>
+	<tr>
+		<th>Screen Name</th>
+		<th>Seats</th>
+		<th>Booking Time</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr th:each="history : ${historyList}">
+		<td th:text="${history.screenName}"></td>
+		<td th:text="${history.seatNumbers}"></td>
+		<td th:text="${#temporals.format(history.bookingTime, 'yyyy-MM-dd HH:mm')}"></td>
+	</tr>
+	</tbody>
+</table>
+
+
+
+</body>
+</html>

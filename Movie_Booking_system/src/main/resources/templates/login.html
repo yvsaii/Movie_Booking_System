@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Login</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Poppins', sans-serif;
+		}
+
+		body {
+			height: 100vh;
+			background: linear-gradient(to right, #f7f7f7, #e2e2e2);
+			overflow: hidden;
+		}
+
+		.login-box {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%) scaleX(0);
+			width: 400px;
+			background: white;
+			padding: 2rem;
+			border-radius: 10px;
+			box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+			animation: slideIn 0.5s ease-in-out forwards;
+		}
+
+		@keyframes slideIn {
+			to {
+				transform: translate(-50%, -50%) scaleX(1);
+			}
+		}
+
+		h2 {
+			text-align: center;
+			margin-bottom: 1.5rem;
+		}
+
+		input {
+			width: 100%;
+			padding: 0.7rem;
+			margin-bottom: 1rem;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+		}
+
+		button {
+			width: 100%;
+			padding: 0.7rem;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #45a049;
+		}
+
+		.register-link {
+			margin-top: 1rem;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+
+<div class="login-box">
+	<h2>Login</h2>
+	<form th:action="@{/MultipleTheater/login}" th:object="${loginform}" method="post" autocomplete="off">
+		<input type="text" name="username" placeholder="Username" id="username" required />
+		<input type="password" name="password" placeholder="Password" id="password" required />
+		<button type="submit" id="login">Login</button>
+	</form>
+	<div class="register-link">
+		<a th:href="@{/MultipleTheater/register}">Don't have an account? Register</a>
+	</div>
+</div>
+<script>
+	const login_btn = document.getElementById('login');
+
+	login_btn.addEventListener('click', (event) =>{
+	   const username = document.getElementById('username').value.trim();
+	   const password = document.getElementById('password').value.trim();
+	   if(!username || !password){
+	       event.preventDefault();
+	       swal.fire("Warning","Please fill the fields","warning");
+	       return;
+	   }
+	});
+</script>
+
+<!-- SweetAlert Scripts -->
+<script th:if="${successMessage}" th:inline="javascript">
+	document.addEventListener("DOMContentLoaded", function() {
+		Swal.fire({
+			position: 'center',
+			title: 'Success',
+			text: [[${successMessage}]],
+			icon: 'success',
+			showConfirmButton: false,
+			timer: 3000
+		});
+	});
+</script>
+
+<script th:if="${errorMessage}" th:inline="javascript">
+	document.addEventListener("DOMContentLoaded", function() {
+        Swal.fire({
+            position: 'top',
+            title: 'Error',
+            text: [[${errorMessage}]],
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    });
+</script>
+
+</body>
+</html>

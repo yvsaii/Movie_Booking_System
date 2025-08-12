@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Galaxy Screens - Movies</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Poppins', sans-serif;
+		}
+
+		body {
+			background: linear-gradient(to right, hsl(0, 0%, 97%), hsl(0, 0%, 89%));
+			color: #333;
+		}
+
+		header {
+			background-color: #4CAF50;
+			color: white;
+			padding: 1.5rem;
+			text-align: center;
+			animation: fadeDown 0.5s ease-in-out;
+		}
+
+		@keyframes fadeDown {
+			from {
+				opacity: 0;
+				transform: translateY(-20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		nav {
+			display: flex;
+			justify-content: center;
+			background-color: #3e8e41;
+			padding: 0.7rem;
+		}
+
+		nav a {
+			color: white;
+			text-decoration: none;
+			margin: 0 1rem;
+			font-weight: bold;
+		}
+
+		nav a:hover {
+			text-decoration: underline;
+		}
+
+		.screens {
+			padding: 2rem;
+			max-width: 1200px;
+			margin: auto;
+		}
+
+		.screens h2 {
+			text-align: center;
+			margin-bottom: 2rem;
+			font-size: 2.5rem;
+		}
+
+		.screen-card {
+			background-color: #fff;
+			border-radius: 10px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+			margin-bottom: 2rem;
+			display: flex;
+			overflow: hidden;
+			height: 250px;
+		}
+
+		.screen-card img {
+			width: 200px;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.screen-info {
+			padding: 1.5rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			flex: 1;
+		}
+
+		.screen-info h3 {
+			font-size: 1.8rem;
+			margin-bottom: 0.5rem;
+			color: #333;
+		}
+
+		.screen-info p {
+			font-size: 1.1rem;
+			margin-bottom: 1.2rem;
+		}
+
+		.screen-info button {
+			padding: 0.8rem 1.5rem;
+			font-size: 1rem;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			width: fit-content;
+		}
+
+		.screen-info button:hover {
+			background-color: #45a049;
+		}
+	</style>
+</head>
+<body>
+
+<header>
+	<h1>Galaxy Screens</h1>
+	<p>Your One-Stop Platform for Movie Ticket Booking</p>
+</header>
+
+<nav>
+	<a th:href="@{/MultipleTheater/home}">Home</a>
+	<a th:href="@{/MultipleTheater/movies}">Movies</a>
+	<a th:href="@{/MultipleTheater/about}">About</a>
+	<a th:href="@{/MultipleTheater/history}">history</a>
+	<a th:href="@{/MultipleTheater/login}">logout</a>
+</nav>
+
+<section class="screens">
+	<h2>Box Office Shows</h2>
+
+	<div class="screen-card">
+		<img th:src="@{/images/kingdom.jpg}" alt="Ramoji Movie">
+		<div class="screen-info">
+			<h3>Kingdom</h3>
+			<p>Seat Capacity: 90</p>
+			<a th:href="@{/MultipleTheater/ramoji}" style="text-decoration: none;">
+				<button>Book Now</button>
+			</a>
+		</div>
+	</div>
+
+	<div class="screen-card">
+		<img th:src="@{/images/war2.jpeg}" alt="NTR Movie">
+		<div class="screen-info">
+			<h3>War 2</h3>
+			<p>Seat Capacity: 70</p>
+			<a th:href="@{/MultipleTheater/ntr}" style="text-decoration: none;">
+				<button>Book Now</button>
+			</a>
+		</div>
+	</div>
+
+	<div class="screen-card">
+		<img th:src="@{/images/8.jpg}" alt="Mahesh Babu Movie">
+		<div class="screen-info">
+			<h3>8 Vasantalu</h3>
+			<p>Seat Capacity: 40</p>
+			<a th:href="@{/MultipleTheater/mahesh}" style="text-decoration: none;">
+				<button>Book Now</button>
+			</a>
+		</div>
+	</div>
+
+	<div class="screen-card">
+		<img th:src="@{/images/animal.jpg}" alt="Vijay Movie">
+		<div class="screen-info">
+			<h3>Animal</h3>
+			<p>Seat Capacity: 80</p>
+			<a th:href="@{/MultipleTheater/Vijay}" style="text-decoration: none;">
+				<button>Book Now</button>
+			</a>
+		</div>
+	</div>
+
+</section>
+
+</body>
+</html>

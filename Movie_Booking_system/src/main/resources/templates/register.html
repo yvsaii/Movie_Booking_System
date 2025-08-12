@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Register</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Poppins', sans-serif;
+		}
+
+		body {
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background: linear-gradient(to right, #f7f7f7, #e2e2e2);
+		}
+
+		.register-box {
+			width: 400px;
+			background: white;
+			padding: 2rem;
+			border-radius: 10px;
+			box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+			transform: scaleX(0);
+			animation: slideIn 0.5s ease-in-out forwards;
+		}
+
+		@keyframes slideIn {
+			to {
+				transform: scaleX(1);
+			}
+		}
+
+		h2 {
+			text-align: center;
+			margin-bottom: 1.5rem;
+		}
+
+		input {
+			width: 100%;
+			padding: 0.7rem;
+			margin-bottom: 1rem;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+		}
+
+		button {
+			width: 100%;
+			padding: 0.7rem;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #45a049;
+		}
+
+		.login-link {
+			margin-top: 1rem;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+
+<div class="register-box">
+	<h2>Create Account</h2>
+	<form th:action="@{/MultipleTheater/register}" method="post" autocomplete="off">
+		<input type="text" name="username" placeholder="Username" id="username" required />
+		<input type="email" name="email" placeholder="Email" id="email" required />
+		<input type="password" name="password" placeholder="Password" id="password" required />
+		<button type="submit" id="register">Register</button>
+	</form>
+	<div class="login-link">
+		<a th:href="@{/MultipleTheater/login}">Already have an account? Login</a>
+	</div>
+</div>
+
+<script th:if="${successMessage}" th:inline="javascript">
+	Swal.fire('Success',[[${successMessage}]],'success');
+</script>
+<script th:if="${errorMessage}" th:inline="javascript">
+	Swal.fire('Error',[[${errorMessage}]],'error');
+</script>
+<script>
+	const register_btn = document.getElementById('register');
+	register_btn.addEventListener('click', (event) =>{
+	   const username = document.getElementById('username').value.trim();
+	   const password = document.getElementById('password').value.trim();
+	   const email = document.getElementById('email').value.trim();
+
+	   if(!username || !password || !email){
+	      event.preventDefault();
+	      swal.fire("Warning","Please fill the fields","warning");
+	   }
+	});
+</script>
+
+</body>
+</html>

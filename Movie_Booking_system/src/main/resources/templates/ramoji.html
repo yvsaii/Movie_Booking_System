@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Multiplex Booking - Ramoji Screen</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<style>
+		* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+		body { display: flex; margin: 0; padding: 20px; background-color: #f5f5f5; }
+		.container { flex: 2; }
+		.screen-name { text-align: center; font-size: 24px; margin-bottom: 10px; color: #444; }
+		.screen { height: 40px; background-color: #ccc; margin: 0 auto 20px auto; width: 60%; border-radius: 10px; text-align: center; line-height: 40px; font-weight: bold; margin-bottom: 13%; }
+		.seats { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; justify-content: center; padding: 10px; }
+		.seat { width: 40px; height: 40px; background-color: hsl(0, 0%, 87%); border: 1px solid hsl(0, 0%, 60%); border-radius: 8px; cursor: pointer; text-align: center; line-height: 40px; user-select: none; }
+		.seat.selected { background-color: #4caf50; color: white; }
+		.seat.booked { background-color: #ff4d4d; color: white; cursor: not-allowed; pointer-events: none; }
+		.sidebar { flex: 1; margin-left: 40px; padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+		.sidebar h3 { margin-bottom: 10px; }
+		.selected-seats { margin-bottom: 10px; }
+		.btn { background-color: hsl(207, 90%, 54%); color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+		.btn:hover:enabled { background-color: hsl(207, 90%, 45%); }
+		.btn:disabled { background-color: hsl(207, 90%, 70%); cursor: not-allowed; }
+		.guide { display: flex; margin-top: 2rem; flex-direction: column; gap: 20px; }
+		.guide .item { display: flex; gap: 20px; align-items: center; }
+		#booked { background-color: #ff4d4d; }
+		#empty { background-color: hsl(0, 0%, 87%); }
+		#selected { background-color: #4caf50; }
+	</style>
+</head>
+<body>
+
+<div class="container">
+	<div class="screen-name">🎬 Ramoji Screen - 90 Seats</div>
+	<div class="screen">SCREEN</div>
+	<div class="seats" id="seatContainer"></div>
+</div>
+
+<div class="sidebar">
+	<h3>Selected Seats</h3>
+	<div class="selected-seats" id="selectedSeats">None</div>
+	<div style="margin-top: 1rem;"><b>Price:</b> ₹<span id="Price">0</span></div>
+	<div style="margin-top: 1rem;"><b>GST:</b> ₹<span id="GST">0</span></div>
+	<div style="margin-top: 1rem;"><b>Total Price:</b> ₹<span id="totalPrice">0</span></div>
+	<button class="btn" id="bookBtn">Book Tickets</button>
+
+	<div class="guide">
+		<div class="item">
+			<div class="seat" id="booked"></div>
+			<p>- Booked</p>
+		</div>
+		<div class="item">
+			<div class="seat" id="empty"></div>
+			<p>- Empty</p>
+		</div>
+		<div class="item">
+			<div class="seat" id="selected"></div>
+			<p>- Selected</p>
+		</div>
+	</div>
+</div>
+
+<script>
+	const seatContainer = document.getElementById('seatContainer');
+	const selectedSeatsDisplay = document.getElementById('selectedSeats');
+	const Price = document.getElementById('Price');
+	const gst = document.getElementById('GST');
+	const totalPrice = document.getElementById('totalPrice');
+	const bookBtn = document.getElementById('bookBtn');
+
+	const seatPrice = 150;
+	const totalSeats = 90;
+
+	let selectedSeats = [];
+
+	// Generate seat divs
+	for (let i = 1; i <= totalSeats; i++) {
+	  const seat = document.createElement('div');
+	  seat.classList.add('seat');
+	  seat.innerText = i;
+	  seat.dataset.number = i;
+	  seatContainer.appendChild(seat);
+	}
+
+	// Fetch booked seats and mark booked ones
+	fetch("http://localhost:8080/MultipleTheater/ramoji/seats")
+		.then(res => res.json())
+		.then(data => {
+			data.forEach(seatData => {
+				const seatDiv = document.querySelector(`.seat[data-number="${seatData.seatNumber}"]`);
+				if (seatData.status === "BOOKED") {
+					seatDiv.classList.add('booked');
+				}
+			});
+		})
+		.catch(() => {
+			console.error("Failed to load booked seats");
+		});
+
+	// Handle seat click
+	seatContainer.addEventListener('click', (e) => {
+		if (!e.target.classList.contains('seat')) return;
+		if (e.target.classList.contains('booked')) return;
+
+		const seatNum = parseInt(e.target.dataset.number);
+		if (selectedSeats.includes(seatNum)) {
+			selectedSeats = selectedSeats.filter(n => n !== seatNum);
+			e.target.classList.remove('selected');
+		} else {
+			selectedSeats.push(seatNum);
+			e.target.classList.add('selected');
+		}
+		updateSummary();
+	});
+
+	function updateSummary() {
+		selectedSeatsDisplay.innerText = selectedSeats.length > 0 ? selectedSeats.join(', ') : 'None';
+
+		const price = selectedSeats.length * seatPrice;
+		const gstAmount = price * 0.18;
+		const total = price + gstAmount;
+		Price.innerText = price.toFixed(2);
+		gst.innerText = gstAmount.toFixed(2);
+		totalPrice.innerText = total.toFixed(2);
+	}
+
+	// Book Tickets button click
+	bookBtn.addEventListener('click', () => {
+		if (selectedSeats.length === 0) {
+			Swal.fire("No Seats Selected", "Please select at least one seat.", "warning");
+			return;
+		}
+
+		bookBtn.disabled = true; // Disable button to prevent multiple clicks
+
+		fetch("http://localhost:8080/MultipleTheater/ramoji/seats/book", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(selectedSeats)
+		})
+		.then(res => res.text())
+		.then(message => {
+			bookBtn.disabled = false; // Re-enable button
+
+			if (message.toLowerCase().includes("success")) {
+				Swal.fire("Success", message, "success");
+
+				// Update UI: mark booked seats, disable clicking, clear selection & summary
+				selectedSeats.forEach(seatNum => {
+					const seatDiv = document.querySelector(`.seat[data-number="${seatNum}"]`);
+					seatDiv.classList.remove('selected');
+					seatDiv.classList.add('booked');
+					seatDiv.style.pointerEvents = 'none';
+				});
+
+				selectedSeats = [];
+				updateSummary();
+			} else {
+				Swal.fire("Error", message, "error");
+			}
+		})
+		.catch(() => {
+			bookBtn.disabled = false;
+			Swal.fire("Error", "Failed to book seats. Please try again later.", "error");
+		});
+	});
+</script>
+
+</body>
+</html>
